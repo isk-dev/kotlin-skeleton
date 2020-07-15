@@ -28,7 +28,7 @@ fun main() {
 
     val notificationTask = ExampleTask()
 
-    val timer = Timer("notify", false);
+    val timer = Timer("notify", false)
     timer.scheduleAtFixedRate(1000, 60000) {
         notificationTask.run()
     }
