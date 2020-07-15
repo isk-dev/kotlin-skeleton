@@ -1,13 +1,13 @@
 import com.natpryce.konfig.*
 import com.natpryce.konfig.ConfigurationProperties.Companion.systemProperties
 import data.ExampleStorage
-import org.apache.log4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.util.*
 import kotlin.concurrent.scheduleAtFixedRate
 
 fun main() {
-    val logger = Logger.getLogger("Logger")
+    val logger = LoggerFactory.getLogger("main")
     logger.info("Started")
 
     val mysqlHost = Key("mysql.host", stringType)
