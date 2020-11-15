@@ -20,6 +20,9 @@ Adapt pom.xml artifact name and IntelliJ.
 Configuration file directory:
 
  `/etc/kotlin-skeleton/`
+ 
+#### Sentry
+Comes with sentry integration via log4j2. Adapt the `dsn` in the `log4j2.xml` to make it work.
 
 #### Production Deploy
 This script is intentionally specific for my system to save work ;)

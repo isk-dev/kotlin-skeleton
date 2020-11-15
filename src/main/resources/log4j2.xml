@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" packages="org.apache.logging.log4j.core,io.sentry.log4j2">
+
+    <properties>
+        <!-- only logger specific variables here -->
+        <property name="package">kotlin-skeleton</property>
+
+        <!-- general variables here -->
+        <property name="logDir">/var/log/${package}</property>
+        <property name="dateStamp">yyyy-MM-dd/HH:mm:ss.SSS/zzz</property>
+        <property name="hourlyPattern">yyyy-MM-dd.HH</property>
+        <property name="dailyPattern">yyyy-MM-dd</property>
+        <property name="minutelyPattern">yyyy-MM-dd.HH:mm</property>
+    </properties>
+
+    <Appenders>
+        <Sentry name="Sentry" dsn="add-project-dsn-here"
+                minimumEventLevel="INFO"
+        />
+
+        <RollingFile
+                name="ErrorLogFileAppender"
+                fileName="${logDir}/error.log"
+                filePattern="${logDir}/error-%d{${dailyPattern}}.log"
+        >
+            <DefaultRolloverStrategy>
+                <Delete basePath="${logDir}" maxDepth="1">
+                    <IfFileName regex="error-.+\.log"/>
+                    <IfLastModified age="7d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+            <PatternLayout>
+                <pattern>%d{${dateStamp}} [%t] %-5p %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+        <RollingFile
+                name="InfoLogFileAppender"
+                fileName="${logDir}/info.log"
+                filePattern="${logDir}/info-%d{${dailyPattern}}.log"
+        >
+            <DefaultRolloverStrategy>
+                <Delete basePath="${logDir}" maxDepth="1">
+                    <IfFileName regex="info-.+\.log"/>
+                    <IfLastModified age="7d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+            <PatternLayout>
+                <pattern>%d{${dateStamp}} [%t] %-5p %m%n</pattern>
+            </PatternLayout>
+            <Filters>
+                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="fatal" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Root level="info" >
+            <AppenderRef ref="Sentry" level="info"/>
+            <AppenderRef ref="ErrorLogFileAppender" level="error"/>
+            <AppenderRef ref="InfoLogFileAppender" level="info"/>
+        </Root>
+    </Loggers>
+</Configuration>
